@@ -1,0 +1,60 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+## Marvel Rivals Character Choice and Performance
+
+This report is analysing the character choices and performance of people that I played Marvel Rivals with.
+
+```{r}
+library("tidyverse")
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vS4k5zyjrILF21AoEQsFyDxmRHzgI-rWJMayyPlZMmrBbQH7CykwIkaQVYTIOO45hJ5v4tRCaMWNH9v/pub?gid=1936018477&single=true&output=csv")
+latest_data <- logged_data %>%
+                rename(Player = 1,
+                       Role = 2,
+                       Kills = 3,
+                       Result = 4, MVP = 5)
+
+most_kills <- max(latest_data$Kills)
+least_kills <- min(latest_data$Kills)
+average_kills <- round(mean(latest_data$Kills))
+
+kills_with_roles <- ggplot(latest_data) +
+                    geom_bar(aes(x = Kills, fill = Role)) +
+                    labs(title = "Which Role generally gets more kills?",
+                         subtitle = "Comparing kills and the role chosen                            in games of Rivals",
+                         x = "Number of Kills",
+                         y = "Number of instances")
+
+role_selection <- ggplot(latest_data) +
+                  geom_bar(aes(x = Role), fill = "darkgreen") +
+                  labs(title = "Which Role was most selected?",
+                       subtitle = "Comparing pick rates for Tank, DPS, and                         Support",
+                       x = "Roles",
+                       y = "Number of picks")
+
+
+role_selection
+kills_with_roles
+```
+
+The most kills I observed anyone get in any game is `r most_kills` whereas the least kills I observed anyone get is `r least_kills`.
+
+The average amount of kills from all the responses is `r average_kills`.
+
+The first bar chart is looking at the amount that each role is picked to show which seems to be most popular among players.
+
+The second bar chart is looking at the kills which each player got that game and which role they obtained those kills with. This can show which roles are most effective at getting kills and which aren't.
+
+![](https://media1.tenor.com/m/qgTXJF6Bgz0AAAAC/jeff-the-land-shark-marvel-rivals.gif)
